@@ -25,20 +25,24 @@ var userName = prompt("What's you name?");
 /*  Get responses from user */
 for ( i=0; i < questions.length; i++) {
     userResponses.push(prompt(questions[i].query));
-    alert("You said, \"" + userResponses[i] + "\".");
 
     if ( userResponses[i] === questions[i].answer) {
 	score++;
-	console.log("That's correct!");
+	alert("You said \"" + userResponses[i] + "\"\n" + 
+	      "Good job, " + userName + ". That's correct! "
+	      + questions[i].correction);
     } else {
-	console.log("I'm sorry " + userName + ", that's incorrect.");
 	userMistakes.push(i);
+	alert("You said \"" + userResponses[i] + "\"\n" + 
+	      "I'm sorry, " + userName + ". That's not right. "
+	      + questions[i].correction);
     }
 }
 
 /* Tell user how they did */
 console.log("\nYou scored " + score + " out of " + questions.length + ".\n\n");
 
+/* // An earlier version of the assignment needed this logic.
 if (userMistakes.length > 0) {
     console.log(userName + ", here are answers to the questions you missed:");
 
@@ -48,3 +52,4 @@ if (userMistakes.length > 0) {
 		    + questions[i].correction);
     }
 }
+*/
