@@ -19,31 +19,32 @@ var questions = [ { query      : "Am I from Texas?",
 
 var score = 0
 var userResponses = [];
-var userMistakes  = new Object();
+var userMistakes  = [];
 var userName = prompt("What's you name?");
 
 /*  Get responses from user */
 for ( i=0; i < questions.length; i++) {
     userResponses.push(prompt(questions[i].query));
-    console.log("You said, \"" + userResponses[i] + "\".");
+    alert("You said, \"" + userResponses[i] + "\".");
 
     if ( userResponses[i] === questions[i].answer) {
 	score++;
 	console.log("That's correct!");
     } else {
 	console.log("I'm sorry " + userName + ", that's incorrect.");
-	var correctedIndex = i + 1;
-	userMistakes[correctedIndex.toString()] = questions[i].correction;
+	userMistakes.push(i);
     }
 }
 
 /* Tell user how they did */
-console.log("\nYou scored " + score + " out of " + questions.length + ".\n");
+console.log("\nYou scored " + score + " out of " + questions.length + ".\n\n");
 
-if (Object.keys(userMistakes).length > 0) {
+if (userMistakes.length > 0) {
     console.log(userName + ", here are answers to the questions you missed:");
 
-    for (var key in userMistakes) {
-	console.log("Question #" +key + ". " + userMistakes[key]);
+    for (i=0; i < userMistakes.length; i++) {
+	questionNumber = userMistakes[i] + 1;
+	console.log("Question #" + questionNumber + ": "
+		    + questions[i].correction);
     }
 }
