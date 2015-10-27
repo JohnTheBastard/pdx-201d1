@@ -5,15 +5,15 @@
  * * * * * * * * * * * * */
 
 var questions = [ { query      : "Am I from Texas?",
-		    answer     : "no",
+		    answer     : "NO",
 		    correction : "I am from Alaska." },
 		  
 		  { query      : "Am I over 40 years old?",
-		    answer     : "no",
+		    answer     : "NO",
 		    correction : "I am only 32 years old." },
 
 		  { query      : "Is my middle name Andrew?",
-		    answer     : "no",
+		    answer     : "NO",
 		    correction : "My middle name is Douglas." } ];
 
 
@@ -22,18 +22,48 @@ var userResponses = [];
 var userMistakes  = [];
 var userName = prompt("What's you name?");
 
+// Normalize responses to YES or NO based on the first letter 
+// of the string, or returns the boolean 'false' if the input
+// is invalid.
+var normalize = function(response) {    
+    if ( response.substr(0,1).toUpperCase() === "Y" ) {
+	return "YES";
+    } else if ( response.substr(0,1).toUpperCase() === "N" ) {
+	return "NO";
+    } else {
+	return false;
+    }
+}
+
+
 /*  Get responses from user */
 for ( i=0; i < questions.length; i++) {
-    userResponses.push(prompt(questions[i].query));
+    var input = normalize(prompt(questions[i].query));
+
+/*    alert("1 Input is " + input);
+    
+    var input2 = normalize(input);
+    
+    alert("2 Input is " + input2);
+*/
+    
+    while (!input) {
+
+	var errorMessage = "I'm sorry, I didn't get that. " + 
+	                   "Please answer YES or NO. \n\n"
+	input = normalize(prompt(errorMessage + questions[i].query));
+	
+    }
+    userResponses.push(input);
 
     if ( userResponses[i] === questions[i].answer) {
 	score++;
-	alert("You said \"" + userResponses[i] + "\"\n" + 
+	alert("You answered " + userResponses[i] + "\n" + 
 	      "Good job, " + userName + ". That's correct! "
 	      + questions[i].correction);
     } else {
 	userMistakes.push(i);
-	alert("You said \"" + userResponses[i] + "\"\n" + 
+	alert("You answered " + userResponses[i] + "\n" + 
 	      "I'm sorry, " + userName + ". That's not right. "
 	      + questions[i].correction);
     }
@@ -41,15 +71,3 @@ for ( i=0; i < questions.length; i++) {
 
 /* Tell user how they did */
 console.log("\nYou scored " + score + " out of " + questions.length + ".\n\n");
-
-/* // An earlier version of the assignment needed this logic.
-if (userMistakes.length > 0) {
-    console.log(userName + ", here are answers to the questions you missed:");
-
-    for (i=0; i < userMistakes.length; i++) {
-	questionNumber = userMistakes[i] + 1;
-	console.log("Question #" + questionNumber + ": "
-		    + questions[i].correction);
-    }
-}
-*/
