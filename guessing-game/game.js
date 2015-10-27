@@ -40,20 +40,14 @@ var normalize = function(response) {
 for ( i=0; i < questions.length; i++) {
     var input = normalize(prompt(questions[i].query));
 
-/*    alert("1 Input is " + input);
-    
-    var input2 = normalize(input);
-    
-    alert("2 Input is " + input2);
-*/
-    
+    // Keep trying til you get a YES or NO.
     while (!input) {
 
 	var errorMessage = "I'm sorry, I didn't get that. " + 
 	                   "Please answer YES or NO. \n\n"
-	input = normalize(prompt(errorMessage + questions[i].query));
-	
+	input = normalize(prompt(errorMessage + questions[i].query));	
     }
+    
     userResponses.push(input);
 
     if ( userResponses[i] === questions[i].answer) {
@@ -70,4 +64,5 @@ for ( i=0; i < questions.length; i++) {
 }
 
 /* Tell user how they did */
-console.log("\nYou scored " + score + " out of " + questions.length + ".\n\n");
+alert(userName + ", you scored " + score + " out of "
+       + questions.length + ".\n" + "Thanks for playing!");
