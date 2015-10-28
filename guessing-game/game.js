@@ -35,6 +35,10 @@ var normalize = function(response) {
 }
 
 var askQuestion = function (index) {
+	var alertString ;
+	var paragraph ;
+	var elementID= "alert" + ( index + 1 ) ;
+
 	var input = normalize( prompt( questions[index].query ) );
 
 	// Keep trying til you get a YES or NO.
@@ -49,14 +53,19 @@ input = normalize( prompt( errorMessage + questions[index].query ) );
 
 	if ( userResponses[index] === questions[index].answer ) {
 score++;
-alert( "You answered " + userResponses[index] + "\n" +
+
+alertString = "You answered " + userResponses[index] + "\n" +
 			 "Good job, " + userName + ". That's correct! "
-			 + questions[index].correction );
+			 + questions[index].correction ;
+
 	} else {
-alert( "You answered " + userResponses[index] + "\n" +
+alertString = "You answered " + userResponses[index] + "\n" +
 			 "I'm sorry, " + userName + ". That's not right. "
-			 + questions[index].correction );
+			 + questions[index].correction ;
 	}
+	paragraph = document.getElementById( elementID ) ;
+ paragraph.innerHTML = alertString ;
+
 
 }
 
