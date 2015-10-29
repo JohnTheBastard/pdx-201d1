@@ -35,46 +35,41 @@ var normalize = function(response) {
 }
 
 var askQuestion = function (index) {
-    var alertString ;
-    var paragraph ;
-    var elementID= "alert" + ( index + 1 ) ;
-    
-    var input = normalize( prompt( questions[index].query ) );
+    var alertString;
+    var paragraph;
+    var errorMessage = "";
+    var input;
+    var elementID= "alert" + ( index + 1 );
+
     
     // Keep trying til you get a YES or NO.
-    while ( !input ) {
-	
-	var errorMessage = "I'm sorry, I didn't get that. " +
-	                   "Please answer YES or NO. \n\n";
+    do {
 	input = normalize( prompt( errorMessage + questions[index].query ) );
-    }
+	errorMessage = "I'm sorry, I didn't get that. " +
+	               "Please answer YES or NO. \n\n";
+    } while ( !input );
     
     userResponses.push( input );
     
     if ( userResponses[index] === questions[index].answer ) {
 	score++;
-	alertString = "You answered " + userResponses[index] + "\n" +
-	              "Good job, " + userName + ". That's correct! "
-	              + questions[index].correction ;
+	alertString = "You answered " + userResponses[index] +
+	              "\nGood job, " + userName + ". That's correct! "
+	              + questions[index].correction;
     } else {
-	alertString = "You answered " + userResponses[index] + "\n" +
-	              "I'm sorry, " + userName + ". That's not right. "
-	              + questions[index].correction ;
+	alertString = "You answered " + userResponses[index]  +
+	              "\nI'm sorry, " + userName + ". That's not right. "
+	              + questions[index].correction;
     }
-    paragraph = document.getElementById( elementID ) ;
-    paragraph.innerHTML = alertString ;
+    paragraph = document.getElementById( elementID );
+    paragraph.innerHTML = alertString;
 }
 
 /*  Get responses from user */
 for ( i=0; i < questions.length; i++ ) {
     askQuestion(i);
-
-    var errorMessage = "I'm sorry, I didn't get that. " + 
-	               "Please answer YES or NO. \n\n"
-    input = normalize( prompt( errorMessage + questions[i].query ) );	
 }
-
-userResponses.push( input );
+//userResponses.push( input );
 
 if ( userResponses[i] === questions[i].answer ) {
     score++;
