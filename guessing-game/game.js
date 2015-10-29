@@ -19,7 +19,6 @@ var questions = [ { query      : "Am I from Texas?",
 
 var score = 0
 var userResponses = [];
-var userMistakes  = [];
 var userName = prompt( "What's you name?" );
 
 // Normalize responses to YES or NO based on the first letter 
@@ -56,7 +55,6 @@ for ( i=0; i < questions.length; i++ ) {
 	       "Good job, " + userName + ". That's correct! "
 	       + questions[i].correction );
     } else {
-	userMistakes.push(i);
 	alert( "You answered " + userResponses[i] + "\n" + 
 	       "I'm sorry, " + userName + ". That's not right. "
 	       + questions[i].correction );
