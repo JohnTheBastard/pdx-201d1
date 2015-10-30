@@ -16,6 +16,8 @@ var questions = [ { query      : "Am I from Texas?",
 		    answer     : "NO",
 		    correction : "My middle name is Douglas." } ];
 
+var imageCorrect = "<img class=\"correct\" src=\"images/green.jpg\" \\>";
+var imageIncorrect = "<img class=\"incorrect\" src=\"images/red.jpg\" \\>";
 
 var score = 0
 var userResponses = [];
@@ -35,6 +37,44 @@ var normalize = function(response) {
 }
 
 var askQuestion = function (index) {
+<<<<<<< HEAD
+	var alertString ;
+	var elementID= "alert" + ( index + 1 ) ;
+	var paragraph = document.getElementById( elementID ) ;
+
+	var input = normalize( prompt( questions[index].query ) );
+
+	// Keep trying til you get a YES or NO.
+	while ( !input ) {
+
+var errorMessage = "I'm sorry, I didn't get that. " +
+									 "Please answer YES or NO. \n\n"
+input = normalize( prompt( errorMessage + questions[index].query ) );
+	}
+
+	userResponses.push( input );
+
+	if ( userResponses[index] === questions[index].answer ) {
+score++;
+
+alertString = imageCorrect + "   You answered " + userResponses[index] + "\n" +
+			 "Good job, " + userName + ". That's correct! "
+			 + questions[index].correction ;
+paragraph.setAttribute("style", "color: green");
+
+	} else {
+alertString = imageIncorrect + "   You answered " + userResponses[index] + "\n" +
+			 "I'm sorry, " + userName + ". That's not right. "
+			 + questions[index].correction ;
+			 paragraph.setAttribute("style", "color: red");
+	}
+
+
+ paragraph.innerHTML = alertString ;
+
+
+
+=======
     var alertString;
     var paragraph;
     var errorMessage = "";
@@ -63,6 +103,7 @@ var askQuestion = function (index) {
     }
     paragraph = document.getElementById( elementID );
     paragraph.innerHTML = alertString;
+>>>>>>> 1f0ab12066246e4760fb50df8828fd090e5fcc80
 }
 
 /*  Get responses from user */

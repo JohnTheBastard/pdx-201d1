@@ -1,0 +1,17 @@
+* {
+  background-color: orange;
+}
+
+.messages {
+  text-align: left;
+}
+
+.correct {
+  width: 2em;
+  vertical-align: middle;
+}
+
+.incorrect {
+  width: 2em;
+  vertical-align: middle;
+}
