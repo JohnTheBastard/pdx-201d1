@@ -37,7 +37,6 @@ var main = (function() {
 
     var franchises = [];
 
-    var myTable = document.getElementById("table");
 
     // These are helper functions for my prototype.
     // They should go away once I understand function factories (I think).
@@ -81,6 +80,36 @@ var main = (function() {
 	return donutsPerCustomer * customerVolume;
     }
     
+    var makeRow = function(myFranchise) {
+	var row = "<tr>";
+	var cell = "";
+	var salesTotal = 0;
+
+	// Fill the location cell
+	cell = "<td>" + myFranchise.location + "</td>";
+	row += cell;
+	
+	// Fill the hourly cells
+	for (var jj=0; jj < 11; jj++) {
+	    var cellValue = myFranchise.hourOfDonutSales();
+	    salesTotal += cellValue;
+	    cell = "<td>" + cellValue + "</td>";
+	    row += cell;
+	}
+	
+	// Fill the total cell and close the row
+	cell = "<td>" + salesTotal + "</td>";
+	row += cell;
+	row += "</tr>";
+
+	return row;
+    }
+
+    var populateTable = function(table) {
+	for (var ii=0; ii < franchises.length; ii++) {
+	    table.innerHTML += franchises[ii].generateTableRow();
+	}
+    }
 
 
     // Franchise constructor
@@ -101,7 +130,10 @@ var main = (function() {
     Franchise.prototype.hourOfDonutSales = function() {
 	return getHourlySales(this.avgDonutsPC, this.randomizedCustomerVolume() );
     }
-
+    Franchise.prototype.generateTableRow = function() {
+	return makeRow(this);
+    }
+    
     /***** Stuff Actually Happens *****/
 
     var franchise = new Franchise("Downtown", 8, 43, 4.50);
@@ -124,45 +156,7 @@ var main = (function() {
     pushFranchise(franchise);
     franchise = new Franchise("Medford", 4, 37, 2.00);
     pushFranchise(franchise);
-    
-    
-    console.log(franchises);
 
-
-    var populateTable = function(table) {
-	var row = "";
-	var cell = "";
-	console.log("I'm here.");
-	
-	for (var ii=0; ii < franchises.length; ii++) {
-	    row = "<tr>";
-	    console.log(row);
-	    // Fill the location cell
-	    cell = "<td>" + franchises[ii].location + "</td>";
-	    row += cell;
-	    console.log(row);
-	    var salesTotal = 0;
-
-	    // Fill the hourly cells
-	    for (var jj=0; jj < 11; jj++) {
-		var cellValue = franchises[ii].hourOfDonutSales();
-		salesTotal += cellValue;
-		cell = "<td>" + cellValue + "</td>";
-		row += cell;
-	    console.log(row);
-	    }
-	    
-	    // Fill the total cell and close the row
-	    cell = "<td>" + salesTotal + "</td>";
-	    row += cell;
-	    row += "</tr>";
-
-	    console.log(row);
-	    table.innerHTML += row;
-	}
-	
-    }
-
-    populateTable(myTable);
+    populateTable( document.getElementById("table") );
     
 })();
