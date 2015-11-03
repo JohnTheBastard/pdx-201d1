@@ -1,4 +1,18 @@
-* {
-  background-color: white;
+body {
+    background-color:orange;
 }
 
+table {
+    background-color:cornsilk;
+}
+
+
+th {
+    color:white;
+    background-color:green;
+    
+}
+
+td {
+    background-color:white
+}
