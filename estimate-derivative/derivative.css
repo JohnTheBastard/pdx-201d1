@@ -1,0 +1,26 @@
+body {
+    background-color:orange;
+}
+
+fieldset {
+    width:23em;
+    background-color:cornsilk;}
+
+legend {
+  padding: 0.2em 0.5em;
+  border:1px solid grey;
+  color:white;
+  background-color:green;
+  font-size:90%;
+  text-align:left;
+    overflow: hidden;
+}
+    
+em, table, td, sup, sub {
+    background-color:cornsilk;
+}
+
+input[type=text] {
+    width:3em;
+    background-color:white;
+}

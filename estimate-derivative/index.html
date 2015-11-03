@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>Derivative Estimate
-  <link rel="stylesheet" type="text/css" href="derivative.css">
+<head><title>Derivative Estimate</title>
+<link rel="stylesheet" type="text/css" href="derivative.css" >
 </head>
 
 <body>
-  <h1><em>Week 1 Extra-credit</em></h1>
+<h1><strong>Week 1 Extra-credit</strong></h1>
 
-
+<form id="myForm" onSubmit="main()">
+<fieldset name="equation">
+<legend>Enter a Polynomial</legend>
+<table>
+  <tr>
+    <td><input type="text" id="coef4" maxlength="5" />
+      <em>x</em><sup>4</sup> + </td>
+    <td><input type="text" id="coef3" maxlength="5" />
+      <em>x</em><sup>3</sup> + </td>
+    <td><input type="text" id="coef2" maxlength="5" />
+      <em>x</em><sup>2</sup> + </td>
+    <td><input type="text" id="coef1" maxlength="5" />
+      <em>x</em> + </td>
+    <td><input type="text" id="coef0" maxlength="5" /> = 0</td>
+  </tr>
+  <tr>
+    <td colspan="3"></td>
+    <td align="right"><em>x</em><sub>0</sub> = </td>
+    <td align="left"><input type="text" id="x0" maxlength="5" /></td>
+    </tr>
+    <tr>
+      <td colspan="4"></td>
+      <td><input id="startButton" type="submit" value="begin"
+	onclick="main();"/></td>
+    </tr>
+</table>
+</fieldset>  
+</form>
 
 </body>
-
 <script src="derivative.js"></script>
 </html>
-</DOCTYPE>
+
