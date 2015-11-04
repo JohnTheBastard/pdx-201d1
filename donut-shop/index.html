@@ -26,6 +26,43 @@
     </tr>
   </table>
   </p>
+
+  <p>
+<fieldset name="newFranchise">
+<legend>Enter a new Donut Shop</legend>
+<table>
+  <tr>
+    <td class="fieldcel"><input type="text" id="location"
+      placeholder="Location" maxlength="20"
+      value="" required />
+    </td>
+    <td class="fieldcel"><input type="text" id="minCPH"
+      placeholder="Minimum Customer/Hour" maxlength="5"
+      value="" required
+      onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" />
+    </td>
+    <td class="fieldcel"><input type="text" id="maxCPH"
+      placeholder="Maximum Customer/Hour" maxlength="5"
+      value="" required
+      onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" />
+    </td>
+    <td class="fieldcel"><input type="text" id="avgDPC"
+      placeholder="Average Donuts/Customer" maxlength="5"
+      value="" required
+      onkeypress="return (event.charCode >= 48 && event.charCode <= 57)
+                                               || event.charCode == 46 " />
+    </td>
+  </tr>
+  <tr>
+    <td class="fieldcel" colspan="3"></td>
+    <td class="fieldcel"><input id="submitButton" type="submit" value="submit"
+	 onclick="addUserInput()"/></td>
+    </tr>
+</table>
+
+</form>
+  </p>
+  
   
 </body>
 

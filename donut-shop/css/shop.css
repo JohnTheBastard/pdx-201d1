@@ -13,6 +13,38 @@ th {
     
 }
 
-td {
-    background-color:white
+tr {
+    background-color:white;
 }
+
+.fieldcel {
+    background-color:cornsilk;
+}
+
+fieldset {
+    width:23em;
+    background-color:cornsilk;}
+
+legend {
+  padding: 0.2em 0.5em;
+  border:1px solid grey;
+  color:white;
+  background-color:green;
+  font-size:90%;
+  text-align:left;
+    overflow: hidden;
+}
+
+input[type=text] {
+    width:10rem;
+    color:black;
+    background-color:white;
+}
+
+
+
+
+
+    
+
+

@@ -4,40 +4,23 @@
  * CF201       Fall 2015 *
  * * * * * * * * * * * * */
 
-var main = (function() {
-    'use strict';
-/*
-    // Initial data set
-    // (This doesn't actually work. Not properly instantiated.
-    var franchises = [ { location    : "Downtown",
-			 minCPH      : 8,
-			 maxCPH      : 43,
-			 avgDonutsPC : 4.50 },
-		       
-		       { location    : "Capitol Hill",
-			 minCPH      : 4,
-			 maxCPH      : 37,
-			 avgDonutsPC : 2.00 },
-		       
-		       { location    : "South Lake Union",
-			 minCPH      : 9,
-			 maxCPH      : 23,
-			 avgDonutsPC : 6.33 },
-		       
-		       { location    : "Wedgewood",
-			 minCPH      : 2,
-			 maxCPH      : 28,
-			 avgDonutsPC : 1.25 },
-		       
-		       { location    : "Ballard",
-			 minCPH      : 8,
-			 maxCPH      : 58,
-			 avgDonutsPC : 3.75 } ];
-*/
+(function() {
+    // maybe some day
+    //'use strict';
+
+    var defaultInput = [ [ "Downtown",         8, 43, 4.50 ],
+			 [ "Capitol Hill",     4, 37, 2.00 ],
+			 [ "South Lake Union", 9, 23, 6.33 ],
+			 [ "Wedgewood",        2, 28, 1.25 ],
+			 [ "Ballard",          8, 58, 3.75 ],
+			 [ "Portland",         8, 43, 4.50 ],
+			 [ "Vancouver",        9, 23, 6.33 ],
+			 [ "Salem",            2, 28, 1.25 ],
+			 [ "Eugene",           8, 58, 3.75 ],
+			 [ "Medford",          4, 37, 2.00 ] ];
 
     var franchises = [];
-
-
+    
     // These are helper functions for my prototype.
     // They should go away once I understand function factories (I think).
     var uniqueness = function(myFranchise) {
@@ -60,8 +43,8 @@ var main = (function() {
     }
 
     var pushFranchise = function(myFranchise) {
-	if (franchise.isUnique) {
-	    franchises.push(franchise);
+	if (myFranchise.isUnique) {
+	    franchises.push(myFranchise);
 	} else {
 	    var preexistingIndex = getIndex(myFranchise);
 	    franchises[preexistingIndex].minCPH = myFranchise.minCPH;
@@ -77,7 +60,7 @@ var main = (function() {
     }
 
     var getHourlySales = function(donutsPerCustomer, customerVolume) {
-	return donutsPerCustomer * customerVolume;
+	return Math.ceil( donutsPerCustomer * customerVolume );
     }
     
     var makeRow = function(myFranchise) {
@@ -104,23 +87,59 @@ var main = (function() {
 
 	return row;
     }
-
+    
+    var populateFranchiseArray = function(myFranchiseArray) {
+	for(var ii=0; ii < myFranchiseArray.length; ii++) {
+	    var franchise = new Franchise( myFranchiseArray[ii][0],
+					   myFranchiseArray[ii][1],
+					   myFranchiseArray[ii][2],
+					   myFranchiseArray[ii][3] );
+	    pushFranchise(franchise);
+	}
+    }
     var populateTable = function(table) {
 	for (var ii=0; ii < franchises.length; ii++) {
 	    table.innerHTML += franchises[ii].generateTableRow();
 	}
     }
 
+    // This gets called from HTML
+    var addUserInput = function() {
+	var loc = document.getElementById('location').value; 
+	var min = document.getElementById('minCPH').value; 
+	var max = document.getElementById('maxCPH').value; 
+	var avg = document.getElementById('avgDPC').value;
+	var userFranchise = new Franchise(loc, min, max, avg);
+	pushFranchise(userFranchise);
+    }
 
+    
     // Franchise constructor
     function Franchise(location, minimum, maximum, average) {
 	this.location = location;
 	this.minCPH = minimum;
 	this.maxCPH = maximum;
 	this.avgDonutsPC = average;
-    };
 
-    // Prototype methods
+	// Prototype methods
+	// (this is suppsed to be equivalent to the prototype
+	// declarations below, but it's breaking things.
+/*
+	isUnique: function isUnique() {
+	    return uniqueness(this);
+	}
+	randomizedCustomerVolume: function randomizedCustomerVolume() {
+	    return getCustomerVolume(this.maxCPH, this.minCPH);
+	}
+	hourOfDonutSales: function hourOfDonutSales() {
+	    return getHourlySales(this.avgDonutsPC, this.randomizedCustomerVolume() );
+	}
+	generateTableRow: function generateTableRow() {
+	    return makeRow(this);
+	}
+*/
+    }
+
     Franchise.prototype.isUnique = function() {
 	return uniqueness(this);
     }
@@ -133,30 +152,14 @@ var main = (function() {
     Franchise.prototype.generateTableRow = function() {
 	return makeRow(this);
     }
-    
+   
+
     /***** Stuff Actually Happens *****/
-
-    var franchise = new Franchise("Downtown", 8, 43, 4.50);
-    pushFranchise(franchise);
-    franchise = new Franchise("Capitol Hill", 4, 37, 2.00);
-    pushFranchise(franchise);
-    franchise = new Franchise("South Lake Union", 9, 23, 6.33);
-    pushFranchise(franchise);
-    franchise = new Franchise("Wedgewood", 2, 28, 1.25);
-    pushFranchise(franchise);
-    franchise = new Franchise("Ballard", 8, 58, 3.75);
-    pushFranchise(franchise);
-    franchise = new Franchise("Portland", 8, 43, 4.50);
-    pushFranchise(franchise);
-    franchise = new Franchise("Vancouver", 9, 23, 6.33);
-    pushFranchise(franchise);
-    franchise = new Franchise("Salem", 2, 28, 1.25);
-    pushFranchise(franchise);
-    franchise = new Franchise("Eugene", 8, 58, 3.75);
-    pushFranchise(franchise);
-    franchise = new Franchise("Medford", 4, 37, 2.00);
-    pushFranchise(franchise);
-
+    
+    populateFranchiseArray(defaultInput);
     populateTable( document.getElementById("table") );
     
 })();
+
+
+
