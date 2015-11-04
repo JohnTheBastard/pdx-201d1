@@ -4,7 +4,7 @@
  * CF201       Fall 2015 *
  * * * * * * * * * * * * */
 
-//(function() {
+var DONUT_MODULE = (function() {
     // maybe some day
     //'use strict';
 
@@ -18,16 +18,20 @@
 			 [ "Salem",            2, 28, 1.25 ],
 			 [ "Eugene",           8, 58, 3.75 ],
 			 [ "Medford",          4, 37, 2.00 ] ];
-
-    var franchises = [];
     
-    // These are helper functions for my prototype.
-    // They should go away once I understand function factories (I think).
+    var my = {};
+    my.franchises = [ ];
+
+    /* * * * * * * * * * * * * * * * * * *
+     *      PRIVATE MODULE METHODS       *
+     * * * * * * * * * * * * * * * * * * */
+    // I'm trying to make these "private" methods,
+    // but this may be an anti-pattern.
     var uniqueness = function(myFranchise) {
 	// Make sure our franchise location doesn't already exist.
 	// (I hate that I have to do it like this, but JavaScript sucks.)
-	for (var ii=0; ii < franchises.length; ii++) {
-	    if ( myFranchise.location == franchises[ii].location ) {
+	for (var ii=0; ii < my.franchises.length; ii++) {
+	    if ( myFranchise.location == my.franchises[ii].location ) {
 		return false;
 	    }
 	}
@@ -35,8 +39,8 @@
     }
 
     var getIndex = function(myFranchise) {
-	for (var ii=0; ii < franchises.length; ii++) {
-	    if ( myFranchise.location == franchises[ii].location ) {
+	for (var ii=0; ii < my.franchises.length; ii++) {
+	    if ( myFranchise.location == my.franchises[ii].location ) {
 		return ii;
 	    }
 	}
@@ -44,14 +48,12 @@
 
     var pushFranchise = function(myFranchise) {
 	if (myFranchise.isUnique()) {
-	    franchises.push(myFranchise);
+	    my.franchises.push(myFranchise);
 	} else {
 	    var preexistingIndex = getIndex(myFranchise);
-	    franchises[preexistingIndex].minCPH = myFranchise.minCPH;
-	    franchises[preexistingIndex].maxCPH = myFranchise.maxCPH;
-	    franchises[preexistingIndex].avgDonutsPC = myFranchise.avgDonutsPC;	    
-	}
-	return;
+	    my.franchises[preexistingIndex].minCPH = myFranchise.minCPH;
+	    my.franchises[preexistingIndex].maxCPH = myFranchise.maxCPH;
+	    my.franchises[preexistingIndex].avgDonutsPC = myFranchise.avgDonutsPC;	    	}
     }
     
     var getCustomerVolume = function(max, min) {
@@ -62,7 +64,9 @@
     var getHourlySales = function(donutsPerCustomer, customerVolume) {
 	return Math.ceil( donutsPerCustomer * customerVolume );
     }
-    
+
+
+    // Refactor this
     var makeRow = function(myFranchise) {
 	var row = "<tr>";
 	var cell = "";
@@ -87,8 +91,11 @@
 
 	return row;
     }
-    
-    var populateFranchiseArray = function(myFranchiseArray) {
+
+    /* * * * * * * * * * * * * * * * * * *
+     *       PUBLIC MODULE METHODS * * * *
+     * * * * * * * * * * * * * * * * * * */
+    my.populateFranchiseArray = function(myFranchiseArray) {
 	for(var ii=0; ii < myFranchiseArray.length; ii++) {
 	    var franchise = new Franchise( myFranchiseArray[ii][0],
 					   myFranchiseArray[ii][1],
@@ -97,18 +104,20 @@
 	    pushFranchise(franchise);
 	}
     }
-    var populateTable = function(table) {
-	for (var ii=0; ii < franchises.length; ii++) {
-	    table.innerHTML += franchises[ii].generateTableRow();
+
+    // Refactor this to use something besides innerHTML
+    my.populateTable = function(table) {
+	for (var ii=0; ii < my.franchises.length; ii++) {
+	    table.innerHTML += my.franchises[ii].generateTableRow();
 	}
     }
 
-    // This gets called from HTML
-    var addUserInput = function() {
+    // This gets called from HTML (hopefully)
+    my.addUserInput = function() {
 	var loc = document.getElementById('location').value; 
-	var min = document.getElementById('minCPH').value; 
-	var max = document.getElementById('maxCPH').value; 
-	var avg = document.getElementById('avgDPC').value;
+	var min = parseInt( document.getElementById('minCPH').value, 10 ); 
+	var max = parseInt( document.getElementById('maxCPH').value, 10 ); 
+	var avg = parseFloat( document.getElementById('avgDPC').value );
 	var userFranchise = new Franchise(loc, min, max, avg);
 	pushFranchise(userFranchise);
     }
@@ -121,7 +130,7 @@
 	this.maxCPH = maximum;
 	this.avgDonutsPC = average;
 
-	// Prototype methods
+	// Franchise methods
 	// (this is suppsed to be equivalent to the prototype
 	// declarations below, but it's breaking things.
 /*
@@ -152,14 +161,16 @@
     Franchise.prototype.generateTableRow = function() {
 	return makeRow(this);
     }
-   
+
 
     /***** Stuff Actually Happens *****/
     
-    populateFranchiseArray(defaultInput);
-    populateTable( document.getElementById("table") );
+    my.populateFranchiseArray(defaultInput);
+    my.populateTable( document.getElementById("table") );
+
+    return my;
     
-//})();
+})();
 
 
 
