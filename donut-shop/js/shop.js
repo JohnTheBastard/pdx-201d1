@@ -4,7 +4,7 @@
  * CF201       Fall 2015 *
  * * * * * * * * * * * * */
 
-(function() {
+//(function() {
     // maybe some day
     //'use strict';
 
@@ -43,7 +43,7 @@
     }
 
     var pushFranchise = function(myFranchise) {
-	if (myFranchise.isUnique) {
+	if (myFranchise.isUnique()) {
 	    franchises.push(myFranchise);
 	} else {
 	    var preexistingIndex = getIndex(myFranchise);
@@ -159,7 +159,7 @@
     populateFranchiseArray(defaultInput);
     populateTable( document.getElementById("table") );
     
-})();
+//})();
 
 
 
