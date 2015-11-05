@@ -3,6 +3,7 @@ body {
 }
 
 table {
+    border:1;
     background-color:cornsilk;
 }
 
