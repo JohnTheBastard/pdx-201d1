@@ -3,28 +3,85 @@
  * Created by John Hearn *
  * CF201       Fall 2015 *
  * * * * * * * * * * * * */
+    
+var headStrings = [ "Location", "7 am", "8 am","9 am",
+		    "10 am", "11 am", "12 pm", "1 pm",
+		    "2 pm", "3 pm", "4 pm", "5 pm", "Total" ]
+
+var defaultInput = [ [ "Downtown",         8, 43, 4.50 ],
+		     [ "Capitol Hill",     4, 37, 2.00 ],
+		     [ "South Lake Union", 9, 23, 6.33 ],
+		     [ "Wedgewood",        2, 28, 1.25 ],
+		     [ "Ballard",          8, 58, 3.75 ],
+		     [ "Portland",         8, 43, 4.50 ],
+		     [ "Vancouver",        9, 23, 6.33 ],
+		     [ "Salem",            2, 28, 1.25 ],
+		     [ "Eugene",           8, 58, 3.75 ],
+		     [ "Medford",          4, 37, 2.00 ] ];
+
+function Row() {
+    this.element = document.createElement("tr");
+
+    this.addCell = function(tag, myText) {
+	var cell = document.createElement( tag );
+	var text = document.createTextNode( myText );
+	cell.appendChild( text );
+	this.element.appendChild( cell );
+    }
+
+    this.addHeadCells = function (headData ) {
+	for (var ii=0; ii < headData.length; ii++) {
+	    this.addCell( "th", headData[ii] );
+	}
+    }
+
+    this.addRowCells = function( myFranchise ) {
+	var tag = "td";
+	var hourOfSales = 0;
+	var salesTotal = 0;
+	
+	this.addCell( tag, myFranchise.location );
+
+	for (var jj=0; jj < 11; jj++) {
+	    hourOfSales = myFranchise.hourOfDonutSales();
+	    salesTotal += hourOfSales;
+	    this.addCell(tag, hourOfSales);
+	}
+
+	this.addCell(tag, salesTotal);
+    }
+    
+}
+
+
+function SalesTable(headData, rowData) {
+    this.table = document.createElement( "table" );
+    this.init = function() {
+	this.addHead(headData);
+	for ( var ii = 0; ii < rowData.length; ii++ ) {
+	    this.addRow( rowData[ii] );
+	}
+    }
+    
+    this.addHead = function() {
+	var row = new Row();
+	row.addHeadCells(headData);
+	return this.table.appendChild(row.element);
+    }
+    
+    this.addRow = function(franchise) {
+	var row = new Row();
+	row.addRowCells(franchise);
+	return this.table.appendChild(row.element);
+    }
+}
+
 
 var DONUT_MODULE = (function() {
     // maybe some day
     //'use strict';
     
-    var headStrings = [ "Location", "7 am", "8 am","9 am",
-			"10 am", "11 am", "12 pm", "1 pm",
-			"2 pm", "3 pm", "4 pm", "5 pm", "Total" ]
-    
-    var defaultInput = [ [ "Downtown",         8, 43, 4.50 ],
-			 [ "Capitol Hill",     4, 37, 2.00 ],
-			 [ "South Lake Union", 9, 23, 6.33 ],
-			 [ "Wedgewood",        2, 28, 1.25 ],
-			 [ "Ballard",          8, 58, 3.75 ],
-			 [ "Portland",         8, 43, 4.50 ],
-			 [ "Vancouver",        9, 23, 6.33 ],
-			 [ "Salem",            2, 28, 1.25 ],
-			 [ "Eugene",           8, 58, 3.75 ],
-			 [ "Medford",          4, 37, 2.00 ] ];
-    
-    
-    var my = {};
+    var my = { };
     my.franchises = [ ];
     my.attachmentNode = document.getElementById("tableNode");
     
@@ -35,15 +92,6 @@ var DONUT_MODULE = (function() {
 
     // I'm trying to make these "private" methods,
     // but this may be an anti-pattern.
-    var initFranchiseArray = function(myFranchiseArray) {
-	for ( var ii=0; ii < myFranchiseArray.length; ii++ ) {
-	    var franchise = new Franchise( myFranchiseArray[ii][0],
-					   myFranchiseArray[ii][1],
-					   myFranchiseArray[ii][2],
-					   myFranchiseArray[ii][3] );
-	    pushFranchise(franchise);
-	}
-    }
     
     var uniqueness = function(myFranchise) {
 	// Make sure our franchise location doesn't already exist.
@@ -64,13 +112,7 @@ var DONUT_MODULE = (function() {
 	}
     }
 
-    var getCustomerVolume = function(max, min) {
-	return Math.floor( Math.random() * (max - min) + 1) + min;
-    }
 
-    var getHourlySales = function(donutsPerCustomer, customerVolume) {
-	return Math.ceil( donutsPerCustomer * customerVolume );
-    }
 
     var pushFranchise = function(myFranchise) {
 	if (myFranchise.isUnique()) {
@@ -82,6 +124,17 @@ var DONUT_MODULE = (function() {
 	    my.franchises[preexistingIndex].avgDonutsPC = myFranchise.avgDonutsPC;	    	}
     }
     
+    var initFranchiseArray = function( initData ) {
+	//var franchiseArray = [ ];
+	for ( var ii=0; ii < initData.length; ii++ ) {
+	    var franchise = new Franchise( initData[ii][0],
+					   initData[ii][1],
+					   initData[ii][2],
+					   initData[ii][3] );
+	    pushFranchise(franchise);
+	}
+	
+    }
 
     /* * * * * * * * * * * * * * * * * * *
      * * * * PUBLIC MODULE METHODS * * * *
@@ -104,6 +157,8 @@ var DONUT_MODULE = (function() {
 	my.attachmentNode.appendChild(my.sales.table);
     }
 
+
+    
     /* * * * * * * * * * * * * * * * * * *
      * * * * * * CONSTRUCTORS  * * * * * *
      * * * * * * * * * * * * * * * * * * */    
@@ -114,39 +169,46 @@ var DONUT_MODULE = (function() {
 	this.maxCPH = maximum;
 	this.avgDonutsPC = average;
 
+	this.isUnique = function() {
+	    return uniqueness(this);
+	}
+
+	this.randomizedCustomerVolume = function() {
+	    var volume = Math.floor( Math.random() * (this.maxCPH - this.minCPH) + 1 )
+		                    + this.minCPH;
+	    return volume;
+	}
+
+	this.hourOfDonutSales = function() {
+	    return Math.ceil(this.avgDonutsPC * this.randomizedCustomerVolume() );
+	}
     }
 
-    Franchise.prototype.isUnique = function() {
-	return uniqueness(this);
-    }
-    Franchise.prototype.randomizedCustomerVolume = function() {
-	return getCustomerVolume(this.maxCPH, this.minCPH);
-    }
-    Franchise.prototype.hourOfDonutSales = function() {
-	return getHourlySales(this.avgDonutsPC, this.randomizedCustomerVolume() );
-    }
-    Franchise.prototype.generateTableRow = function() {
-	return makeRow(this);
-    }
-    
-    // I want to refactor makeCell, addHeadCellsTo, & addRowCellsTo
-    // to be delegates of an Element wrapper (once I know how)
-    
-    var makeCell = function(tag, myText) {
+
+    //////////////////////////////////////////////////////////////////
+    // I want to refactor makeCell, addHeadCellsTo, & addRowCellsTo //
+    // to be delegates of an Element wrapper (once I know how)      //
+    //////////////////////////////////////////////////////////////////
+
+
+/*    
+    var addCell = function(tag, myText) {
 	var td = document.createElement( tag );
 	var text = document.createTextNode( myText );
 	td.appendChild(text);
 	return td;
     }
 
-    var addHeadCellsTo = function(tr, headData) {
+
+    var addHeadCells = function(tr, headData) {
 	for (var ii=0; ii < headData.length; ii++) {
-	    tr.appendChild( makeCell( "th", headData[ii] ) );
+	    tr.addCell( "th", headData[ii] ) );
 	}
 	return tr;
     }
-
-    var addRowCellsTo = function(tr, myFranchise) {
+*/
+    
+    var addRowCells = function(tr, myFranchise) {
 	var tag = "td";
 	var hourOfSales = 0;
 	var salesTotal = 0;
@@ -164,29 +226,7 @@ var DONUT_MODULE = (function() {
 	return tr;
     }
 
-    function SalesTable(headData, rowData) {
-	this.table = document.createElement( "table" );
-	this.init(headData, rowData);
-    }
 
-    SalesTable.prototype.init = function(headData, rowData) {
-	this.addHead(headData);
-	for ( var ii = 0; ii < rowData.length; ii++ ) {
-	    this.addRow( my.franchises[ii] );
-	}
-    }
-
-    SalesTable.prototype.addHead = function(headData) {
-	var tr = document.createElement("tr");
-	tr = addHeadCellsTo(tr, headData);
-	return this.table.appendChild(tr);
-    }
-
-    SalesTable.prototype.addRow = function(franchise) {
-	var tr = document.createElement("tr");
-	tr = addRowCellsTo(tr, franchise);
-	return this.table.appendChild(tr);
-    }
         
 
     /*********************************** 
@@ -196,6 +236,7 @@ var DONUT_MODULE = (function() {
     initFranchiseArray(defaultInput);
     
     my.sales = new SalesTable(headStrings, my.franchises);
+    my.sales.init();
     my.attachmentNode.appendChild(my.sales.table);
 
     return my;
