@@ -19,6 +19,28 @@ var defaultInput = [ [ "Downtown",         8, 43, 4.50 ],
 		     [ "Eugene",           8, 58, 3.75 ],
 		     [ "Medford",          4, 37, 2.00 ] ];
 
+
+    /* * * * * * * * * * * * * * * * * * *
+     * * * * * * CONSTRUCTORS  * * * * * *
+     * * * * * * * * * * * * * * * * * * */    
+
+function Franchise(location, minimum, maximum, average) {
+    this.location = location;
+    this.minCPH = minimum;
+    this.maxCPH = maximum;
+    this.avgDonutsPC = average;
+    
+    this.randomizedCustomerVolume = function() {
+	var volume = Math.floor( Math.random() * (this.maxCPH - this.minCPH) + 1 )
+	                         + this.minCPH;
+	return volume;
+    }
+    
+    this.hourOfDonutSales = function() {
+	return Math.ceil(this.avgDonutsPC * this.randomizedCustomerVolume() );
+    }
+}
+
 function Row() {
     this.element = document.createElement("tr");
     this.addCell = function(tag, myText) {
@@ -50,13 +72,12 @@ function Row() {
 function SalesTable(headData, rowData) {
     this.table = document.createElement( "table" );
     this.init = function init() {
-	console.log(this);
 	this.addHead(headData);
 	for ( var ii = 0; ii < rowData.length; ii++ ) {
 	    this.addRow( rowData[ii] );
 	}
     }
-    this.addHead = function() {
+    this.addHead = function () {
 	var row = new Row();
 	row.addHeadCells(headData);
 	return this.table.appendChild(row.element);
@@ -66,7 +87,6 @@ function SalesTable(headData, rowData) {
 	row.addRowCells(franchise);
 	return this.table.appendChild(row.element);
     }
-    console.log(this);
 }
 
 
@@ -86,35 +106,15 @@ var DONUT_MODULE = (function() {
     // I'm trying to make these "private" methods,
     // but this may be an anti-pattern.
     
-    var uniqueness = function(myFranchise) {
-	// Make sure our franchise location doesn't already exist.
-	// (I hate doing it like this, but JavaScript objects suck.)
-	for (var ii=0; ii < my.franchises.length; ii++) {
-	    if ( myFranchise.location == my.franchises[ii].location ) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-    var getIndex = function(myFranchise) {
-	for (var ii=0; ii < my.franchises.length; ii++) {
-	    if ( myFranchise.location == my.franchises[ii].location ) {
-		return ii;
-	    }
-	}
-    }
-
-
-
-    var pushFranchise = function(myFranchise) {
-	if (myFranchise.isUnique()) {
-	    my.franchises.push(myFranchise);
+    var pushFranchise = function(franchise) {
+	if (my.franchises.doesntHave(franchise)) {
+	    my.franchises.push(franchise);
 	} else {
-	    var preexistingIndex = getIndex(myFranchise);
-	    my.franchises[preexistingIndex].minCPH = myFranchise.minCPH;
-	    my.franchises[preexistingIndex].maxCPH = myFranchise.maxCPH;
-	    my.franchises[preexistingIndex].avgDonutsPC = myFranchise.avgDonutsPC;	    	}
+	    var oldIndex = my.franchises.getIndex(franchise);
+	    my.franchises[oldIndex].minCPH = franchise.minCPH;
+	    my.franchises[oldIndex].maxCPH = franchise.maxCPH;
+	    my.franchises[oldIndex].avgDonutsPC = franchise.avgDonutsPC;
+	}
     }
     
     var initFranchiseArray = function( initData ) {
@@ -151,32 +151,27 @@ var DONUT_MODULE = (function() {
 	my.attachmentNode.appendChild(my.sales.table);
     }
 
-
-    
-    /* * * * * * * * * * * * * * * * * * *
-     * * * * * * CONSTRUCTORS  * * * * * *
-     * * * * * * * * * * * * * * * * * * */    
-
-    function Franchise(location, minimum, maximum, average) {
-	this.location = location;
-	this.minCPH = minimum;
-	this.maxCPH = maximum;
-	this.avgDonutsPC = average;
-
-	this.isUnique = function() {
-	    return uniqueness(this);
+    my.franchises.doesntHave = function(franchise) {
+	// Make sure our franchise location doesn't already exist.
+	// (I hate doing it like this, but JavaScript objects suck.)
+	for (var ii=0; ii < my.franchises.length; ii++) {
+	    if ( franchise.location == my.franchises[ii].location ) {
+		return false;
+	    }
 	}
+	return true;
+    }
 
-	this.randomizedCustomerVolume = function() {
-	    var volume = Math.floor( Math.random() * (this.maxCPH - this.minCPH) + 1 )
-		                    + this.minCPH;
-	    return volume;
-	}
-
-	this.hourOfDonutSales = function() {
-	    return Math.ceil(this.avgDonutsPC * this.randomizedCustomerVolume() );
+    my.franchises.getIndex = function(franchise) {
+	for (var ii=0; ii < my.franchises.length; ii++) {
+	    if ( franchise.location == my.franchises[ii].location ) {
+		return ii;
+	    }
 	}
     }
+
+    
+
 
     
     /*********************************** 
