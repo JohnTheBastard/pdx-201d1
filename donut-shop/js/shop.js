@@ -21,59 +21,52 @@ var defaultInput = [ [ "Downtown",         8, 43, 4.50 ],
 
 function Row() {
     this.element = document.createElement("tr");
-
     this.addCell = function(tag, myText) {
 	var cell = document.createElement( tag );
 	var text = document.createTextNode( myText );
 	cell.appendChild( text );
 	this.element.appendChild( cell );
     }
-
     this.addHeadCells = function (headData ) {
 	for (var ii=0; ii < headData.length; ii++) {
 	    this.addCell( "th", headData[ii] );
 	}
     }
-
     this.addRowCells = function( myFranchise ) {
 	var tag = "td";
 	var hourOfSales = 0;
 	var salesTotal = 0;
-	
 	this.addCell( tag, myFranchise.location );
-
 	for (var jj=0; jj < 11; jj++) {
 	    hourOfSales = myFranchise.hourOfDonutSales();
 	    salesTotal += hourOfSales;
 	    this.addCell(tag, hourOfSales);
 	}
-
 	this.addCell(tag, salesTotal);
     }
-    
 }
 
 
 function SalesTable(headData, rowData) {
     this.table = document.createElement( "table" );
-    this.init = function() {
+    this.init = function init() {
+	console.log(this);
 	this.addHead(headData);
 	for ( var ii = 0; ii < rowData.length; ii++ ) {
 	    this.addRow( rowData[ii] );
 	}
     }
-    
     this.addHead = function() {
 	var row = new Row();
 	row.addHeadCells(headData);
 	return this.table.appendChild(row.element);
     }
-    
     this.addRow = function(franchise) {
 	var row = new Row();
 	row.addRowCells(franchise);
 	return this.table.appendChild(row.element);
     }
+    console.log(this);
 }
 
 
@@ -154,6 +147,7 @@ var DONUT_MODULE = (function() {
 	// redraw the table
 	my.attachmentNode.removeChild(my.sales.table);
 	my.sales = new SalesTable(headStrings, my.franchises);
+	my.sales.init();
 	my.attachmentNode.appendChild(my.sales.table);
     }
 
@@ -184,51 +178,7 @@ var DONUT_MODULE = (function() {
 	}
     }
 
-
-    //////////////////////////////////////////////////////////////////
-    // I want to refactor makeCell, addHeadCellsTo, & addRowCellsTo //
-    // to be delegates of an Element wrapper (once I know how)      //
-    //////////////////////////////////////////////////////////////////
-
-
-/*    
-    var addCell = function(tag, myText) {
-	var td = document.createElement( tag );
-	var text = document.createTextNode( myText );
-	td.appendChild(text);
-	return td;
-    }
-
-
-    var addHeadCells = function(tr, headData) {
-	for (var ii=0; ii < headData.length; ii++) {
-	    tr.addCell( "th", headData[ii] ) );
-	}
-	return tr;
-    }
-*/
     
-    var addRowCells = function(tr, myFranchise) {
-	var tag = "td";
-	var hourOfSales = 0;
-	var salesTotal = 0;
-	
-	tr.appendChild( makeCell( tag, myFranchise.location ) );
-
-	for (var jj=0; jj < 11; jj++) {
-	    hourOfSales = myFranchise.hourOfDonutSales();
-	    salesTotal += hourOfSales;
-	    tr.appendChild( makeCell(tag, hourOfSales) );
-	}
-
-	tr.appendChild( makeCell( tag, salesTotal ) );
-
-	return tr;
-    }
-
-
-        
-
     /*********************************** 
      ***** Stuff Actually Happens ******
      ***********************************/
