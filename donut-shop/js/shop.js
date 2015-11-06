@@ -103,6 +103,7 @@ var DONUT_MODULE = (function() {
      * * * * PUBLIC MODULE METHODS * * * *
      * * * * * * * * * * * * * * * * * * */
 
+    // Set up array of franchise objects with default data
     my.franchises.init = function( initData ) {
 	for ( var ii=0; ii < initData.length; ii++ ) {
 	    var franchise = new Franchise( initData[ii][0],
@@ -113,7 +114,8 @@ var DONUT_MODULE = (function() {
 	    my.franchises.sort( my.compare );
 	}
     }
-    
+
+    // returns false if franchise already exists in array
     my.franchises.doesntHave = function( franchise ) {
 	// Make sure our franchise location doesn't already exist.
 	// (I hate doing it like this, but JavaScript objects suck.)
@@ -125,6 +127,7 @@ var DONUT_MODULE = (function() {
 	return true;
     }
 
+    
     my.franchises.getIndex = function( franchise ) {
 	for ( var ii=0; ii < my.franchises.length; ii++ ) {
 	    if ( franchise.location == my.franchises[ii].location ) {
@@ -146,6 +149,7 @@ var DONUT_MODULE = (function() {
 	}
     }
 
+    // compare funcion to allow sorting array of franchises
     my.compare = function compare( franchise1, franchise2 ) {
 	if ( franchise1.location < franchise2.location )
 	    return -1;
@@ -154,14 +158,13 @@ var DONUT_MODULE = (function() {
 	return 0;
     }
     
-    // This gets called from HTML
+    // This probably only gets called from HTML 
     my.addUserInput = function() {
 	var loc = document.getElementById( 'location' ).value; 
 	var min = parseInt( document.getElementById( 'minCPH' ).value, 10 ); 
 	var max = parseInt( document.getElementById( 'maxCPH' ).value, 10 ); 
 	var avg = parseFloat( document.getElementById( 'avgDPC' ).value );
 
-//	console.log("loc = ", loc, "\nmin = ", min, "\nmax = ", max, "\navg = ", avg);
 	// Do some cursory input validation
 	if ( loc == "" || isNaN(min) || isNaN(max) || isNaN(avg) ) {
 	    return false;
