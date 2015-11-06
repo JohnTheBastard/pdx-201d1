@@ -41,6 +41,7 @@ function Franchise( location, minimum, maximum, average ) {
     }
 }
 
+// wrapper for DOM <tr> element to extend
 function Row() {
     this.element = document.createElement( "tr" );
     this.addCell = function( tag, myText ) {
@@ -50,8 +51,9 @@ function Row() {
 	this.element.appendChild( cell );
     }
     this.addHeadCells = function( headData ) {
+	var tag = "th";
 	for (var ii=0; ii < headData.length; ii++) {
-	    this.addCell( "th", headData[ii] );
+	    this.addCell( tag, headData[ii] );
 	}
     }
     this.addRowCells = function( myFranchise ) {
@@ -70,7 +72,7 @@ function Row() {
 
 function SalesTable( headData, rowData ) {
     this.table = document.createElement( "table" );
-    this.init = function init() {
+    this.init = function() {
 	this.addHead( headData );
 	for ( var ii = 0; ii < rowData.length; ii++ ) {
 	    this.addRow( rowData[ii] );
@@ -93,7 +95,7 @@ var DONUT_MODULE = (function() {
     //'use strict';
 
     var my = { };
-    my.attachmentNode = document.getElementById( "moduleNode" );
+    my.anchorNode = document.getElementById( "moduleNode" );
     my.franchises = [ ];
 
     
@@ -107,7 +109,7 @@ var DONUT_MODULE = (function() {
 					   initData[ii][1],
 					   initData[ii][2],
 					   initData[ii][3] );
-	    my.franchises.push( franchise );
+	    my.franchises.update( franchise );
 	    my.franchises.sort( my.compare );
 	}
     }
@@ -131,10 +133,10 @@ var DONUT_MODULE = (function() {
 	}
     }
     
-    // Override default array push() method to prevent duplicates
-    my.franchises.push = function( franchise ) {
+    // Either push new franchise or override an old one
+    my.franchises.update = function( franchise ) {
 	if ( my.franchises.doesntHave( franchise ) ) {
-	    my.franchises[ my.franchises.length ] = franchise;
+	    my.franchises.push( franchise );
 	    my.franchises.sort( my.compare );
 	} else {
 	    var oldIndex = my.franchises.getIndex( franchise );
@@ -158,16 +160,30 @@ var DONUT_MODULE = (function() {
 	var min = parseInt( document.getElementById( 'minCPH' ).value, 10 ); 
 	var max = parseInt( document.getElementById( 'maxCPH' ).value, 10 ); 
 	var avg = parseFloat( document.getElementById( 'avgDPC' ).value );
-	var userFranchise = new Franchise( loc, min, max, avg );
 
-	// store (or update) our new franchise data
-	my.franchises.push( userFranchise );
+//	console.log("loc = ", loc, "\nmin = ", min, "\nmax = ", max, "\navg = ", avg);
+	// Do some cursory input validation
+	if ( loc == "" || isNaN(min) || isNaN(max) || isNaN(avg) ) {
+	    return false;
+	} else {
 
-	// redraw the table
-	my.attachmentNode.removeChild( my.sales.table );
-	my.sales = new SalesTable( headStrings, my.franchises );
-	my.sales.init();
-	my.attachmentNode.appendChild( my.sales.table );
+	    // capitalize the first letter
+	    loc = loc.charAt(0).toUpperCase() + loc.slice(1);
+	    
+	    var userFranchise = new Franchise( loc, min, max, avg );
+	    
+	    // store (or update) our new franchise data
+	    my.franchises.update( userFranchise );
+	    
+	    // redraw the table
+	    my.anchorNode.removeChild( my.sales.table );
+	    // I might have a memory leak here. Not sure.
+	    // I don't think this delete line does anything.
+	    //delete my.sales.table;
+	    my.sales = new SalesTable( headStrings, my.franchises );
+	    my.sales.init();
+	    my.anchorNode.appendChild( my.sales.table );
+	}
     }
 
     /*********************************** 
@@ -177,7 +193,7 @@ var DONUT_MODULE = (function() {
     my.franchises.init( defaultInput );
     my.sales = new SalesTable( headStrings, my.franchises );
     my.sales.init();
-    my.attachmentNode.appendChild( my.sales.table );
+    my.anchorNode.appendChild( my.sales.table );
 
     return my;
     
