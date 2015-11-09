@@ -183,10 +183,10 @@ var DONUT_MODULE = (function() {
 	    my.franchises.update( userFranchise );
 	    
 	    // redraw the table
+	    // This is a memory leak. Deleting an element does not
+	    // remove it's children from memory, so I need to
+	    // implement a recursive method for deletion.
 	    my.anchorNode.removeChild( my.sales.table );
-	    // I might have a memory leak here. Not sure.
-	    // I don't think this delete line does anything.
-	    //delete my.sales.table;
 	    my.sales = new SalesTable( headStrings, my.franchises );
 	    my.sales.init();
 	    my.anchorNode.appendChild( my.sales.table );
