@@ -41,7 +41,9 @@ function Franchise( location, minimum, maximum, average ) {
     }
 }
 
-// wrapper for DOM <tr> element to extend
+// wrapper for DOM <tr> element to extend functionality without breaking
+// browser compatability. See here for more info on why:
+// http://perfectionkills.com/whats-wrong-with-extending-the-dom/
 function Row() {
     this.element = document.createElement( "tr" );
     this.addCell = function( tag, myText ) {
@@ -90,6 +92,8 @@ function SalesTable( headData, rowData ) {
     }
 }
 
+// Info on where this MODULE design pattern came from:
+// http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
 var DONUT_MODULE = (function() {
     // maybe some day
     //'use strict';
