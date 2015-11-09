@@ -16,8 +16,8 @@ var questions = [ { query      : "Am I from Texas?",
 		    answer     : "NO",
 		    correction : "My middle name is Douglas." } ];
 
-var imageCorrect = "<img class=\"correct\" src=\"images/green.jpg\" \\>";
-var imageIncorrect = "<img class=\"incorrect\" src=\"images/red.jpg\" \\>";
+var imageCorrect = "<img class=\"correct\" src=\"img/green.jpg\" \\>";
+var imageIncorrect = "<img class=\"incorrect\" src=\"img/red.jpg\" \\>";
 
 var score = 0
 var userResponses = [];
